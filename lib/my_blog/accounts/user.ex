@@ -9,13 +9,14 @@ defmodule MyBlog.Accounts.User do
     field(:hashed_password, :string, redact: true)
     field(:confirmed_at, :naive_datetime)
     belongs_to(:organization, MyBlog.Org.Organization)
+    belongs_to(:role, MyBlog.Access.Role)
 
     timestamps()
   end
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :organization_id])
+    |> registration_changeset(attrs)
   end
 
   @doc """
@@ -43,7 +44,7 @@ defmodule MyBlog.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:name, :email, :password, :organization_id])
+    |> cast(attrs, [:name, :email, :password, :organization_id, :role_id])
     |> validate_email(opts)
     |> validate_password(opts)
   end

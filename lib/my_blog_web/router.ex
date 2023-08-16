@@ -28,6 +28,8 @@ defmodule MyBlogWeb.Router do
 
     resources "/organizations", OrganizationController
     resources "/posts", PostController
+    resources "/roles", RoleController
+    resources "/members", UserController
   end
 
   ## Authentication routes

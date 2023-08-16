@@ -1,0 +1,8 @@
+<.header>
+  Edit User <%= @user.name %>
+  <:subtitle>Use this form to manage user records in your database.</:subtitle>
+</.header>
+
+<.user_form changeset={@changeset} action={~p"/members/#{@user}"} />
+
+<.back navigate={~p"/members"}>Back to organizations</.back>

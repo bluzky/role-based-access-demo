@@ -1,0 +1,13 @@
+<.simple_form :let={f} for={@changeset} action={@action}>
+  <.error :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </.error>
+  <.input field={f[:name]} type="text" label="Name" />
+  <.input field={f[:code]} type="text" label="Code" />
+  <.input field={f[:permissions]} type="text" label="Permissions" />
+  <.input field={f[:scope]} type="text" label="Scope" />
+  <.input field={f[:filters]} type="text" label="Filters" />
+  <:actions>
+    <.button>Save Role</.button>
+  </:actions>
+</.simple_form>

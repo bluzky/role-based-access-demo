@@ -8,6 +8,10 @@ defmodule MyBlog.Accounts do
 
   alias MyBlog.Accounts.{User, UserToken, UserNotifier}
 
+  def list_users(organization) do
+    Repo.all(from u in User, where: u.organization_id == ^organization.id)
+  end
+
   ## Database getters
 
   @doc """
@@ -81,13 +85,23 @@ defmodule MyBlog.Accounts do
     |> case do
       {:ok, user} ->
         {:ok, organization} =
-          MyBlog.Org.create_organization(%{name: user.email, contact_email: user.email})
+          MyBlog.Org.create_organization(%{
+            name: user.email,
+            contact_email: user.email,
+            owner_id: user.id
+          })
 
         update_user(user, %{organization_id: organization.id})
 
       error ->
         error
     end
+  end
+
+  def create_user(attrs, organization) do
+    %User{}
+    |> User.changeset(Map.put(attrs, "organization_id", organization.id))
+    |> Repo.insert()
   end
 
   @doc """
@@ -103,10 +117,18 @@ defmodule MyBlog.Accounts do
     User.registration_changeset(user, attrs, hash_password: false, validate_email: false)
   end
 
+  def change_user(%User{} = user, attrs \\ %{}) do
+    User.changeset(user, attrs)
+  end
+
   def update_user(user, attrs) do
     user
     |> User.changeset(attrs)
     |> Repo.update()
+  end
+
+  def delete_user(user) do
+    Repo.delete(user)
   end
 
   ## Settings
@@ -249,7 +271,7 @@ defmodule MyBlog.Accounts do
     {:ok, query} = UserToken.verify_session_token_query(token)
 
     Repo.one(query)
-    |> Repo.preload(:organization)
+    |> Repo.preload([:organization, :role])
   end
 
   @doc """

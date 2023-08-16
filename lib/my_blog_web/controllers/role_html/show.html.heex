@@ -1,0 +1,19 @@
+<.header>
+  Role <%= @role.id %>
+  <:subtitle>This is a role record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/roles/#{@role}/edit"}>
+      <.button>Edit role</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @role.name %></:item>
+  <:item title="Code"><%= @role.code %></:item>
+  <:item title="Permissions"><%= @role.permissions %></:item>
+  <:item title="Scope"><%= @role.scope %></:item>
+  <:item title="Filters"><%= @role.filters %></:item>
+</.list>
+
+<.back navigate={~p"/roles"}>Back to roles</.back>
