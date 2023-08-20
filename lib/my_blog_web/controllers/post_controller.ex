@@ -1,6 +1,19 @@
 defmodule MyBlogWeb.PostController do
   use MyBlogWeb, :controller
 
+  plug(MyBlogWeb.Plugs.CheckPermissions,
+    policy: MyBlog.Access.PostPolicy,
+    actions: [
+      index: "read",
+      show: "read",
+      create: "create",
+      delete: "delete"
+    ],
+    default_access: :allow,
+    # function receives conn and returns resource
+    resource_extractor: &__MODULE__.get_post/1
+  )
+
   alias MyBlog.Content
   alias MyBlog.Content.Post
 
@@ -58,5 +71,12 @@ defmodule MyBlogWeb.PostController do
     conn
     |> put_flash(:info, "Post deleted successfully.")
     |> redirect(to: ~p"/posts")
+  end
+
+  # load post from query
+  def get_post(conn) do
+    if conn.params["id"] do
+      Content.get_post!(conn.params["id"])
+    end
   end
 end

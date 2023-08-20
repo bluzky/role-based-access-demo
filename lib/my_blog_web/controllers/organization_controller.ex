@@ -4,6 +4,17 @@ defmodule MyBlogWeb.OrganizationController do
   alias MyBlog.Org
   alias MyBlog.Org.Organization
 
+  plug(MyBlogWeb.Plugs.CheckPermissions,
+    policy: MyBlog.Access.OrganizationPolicy,
+    actions: [
+      show: "read",
+      update: "update",
+      edit: "update",
+      delete: "delete"
+    ],
+    default_access: :deny
+  )
+
   def index(conn, _params) do
     organizations = Org.list_organizations()
     render(conn, :index, organizations: organizations)

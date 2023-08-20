@@ -1,5 +1,6 @@
 defmodule MyBlog.Accounts.User do
   use Ecto.Schema
+  use MyBlog.Access.Multitenancy, column: :organization_id
   import Ecto.Changeset
 
   schema "users" do
@@ -16,7 +17,8 @@ defmodule MyBlog.Accounts.User do
 
   def changeset(user, attrs) do
     user
-    |> registration_changeset(attrs)
+    |> cast(attrs, [:name, :email, :password, :organization_id, :role_id])
+    |> validate_email([])
   end
 
   @doc """

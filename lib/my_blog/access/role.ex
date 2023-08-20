@@ -17,5 +17,6 @@ defmodule MyBlog.Access.Role do
     role
     |> cast(attrs, [:name, :code, :permissions, :scope, :filters])
     |> validate_required([:name, :code, :permissions])
+    |> unique_constraint(:code)
   end
 end

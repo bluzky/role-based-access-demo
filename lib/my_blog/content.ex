@@ -19,6 +19,7 @@ defmodule MyBlog.Content do
   """
   def list_posts do
     Repo.all(Post)
+    |> Repo.preload(:author)
   end
 
   @doc """

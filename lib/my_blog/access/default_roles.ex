@@ -5,23 +5,22 @@ defmodule MyBlog.Access.DefaultRoles do
         name: "admin",
         code: "admin",
         permissions: %{
-          posts: "all",
-          users: "all"
+          users: ["create", "read", "update", "delete"],
+          posts: ["create", "read", "update", "delete"],
+          organizations: ["read", "update", "delete"]
         }
       },
       %{
         name: "editor",
         code: "editor",
         permissions: %{
-          posts: "all",
-          users: "none"
+          posts: ["create", "read", "update", "delete"]
         }
       },
       %{
         name: "reviewer",
         code: "reviewer",
         permissions: %{
-          users: "none",
           posts: ~w(read)
         }
       }

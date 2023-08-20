@@ -11,5 +11,6 @@
 # and so on) as they will fail if something goes wrong.
 MyBlog.Access.DefaultRoles.all()
 |> Enum.each(fn role ->
-  MyBlog.Access.create_role(role)
+  MyBlog.Access.Role.changeset(%MyBlog.Access.Role{}, role)
+  |> MyBlog.Repo.insert(on_conflict: {:replace, [:permissions]}, conflict_target: [:code])
 end)

@@ -4,6 +4,18 @@ defmodule MyBlogWeb.UserController do
   alias MyBlog.Accounts
   alias MyBlog.Accounts.User
 
+  plug(MyBlogWeb.Plugs.CheckPermissions,
+    policy: MyBlog.Access.UserPolicy,
+    actions: [
+      index: "read",
+      show: "read",
+      new: "create",
+      create: "create",
+      delete: "delete"
+    ],
+    default_access: :deny
+  )
+
   def index(conn, _params) do
     users = Accounts.list_users(conn.assigns.current_user.organization)
     render(conn, :index, users: users)

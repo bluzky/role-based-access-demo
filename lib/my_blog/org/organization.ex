@@ -1,5 +1,6 @@
 defmodule MyBlog.Org.Organization do
   use Ecto.Schema
+  use MyBlog.Access.Multitenancy, column: :id
   import Ecto.Changeset
 
   schema "organizations" do

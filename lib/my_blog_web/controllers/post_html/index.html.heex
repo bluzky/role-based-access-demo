@@ -1,7 +1,10 @@
 <.header>
   Listing Posts
   <:actions>
-    <.link href={~p"/posts/new"}>
+    <.link
+      :if={MyBlog.Access.PostPolicy.authorized?(@conn.assigns.current_user, "create")}
+      href={~p"/posts/new"}
+    >
       <.button>New Post</.button>
     </.link>
   </:actions>
@@ -10,16 +13,27 @@
 <.table id="posts" rows={@posts} row_click={&JS.navigate(~p"/posts/#{&1}")}>
   <:col :let={post} label="Title"><%= post.title %></:col>
   <:col :let={post} label="Image"><%= post.image %></:col>
-  <:col :let={post} label="Content"><%= post.content %></:col>
+  <:col :let={post} label="Author"><%= post.author.email %></:col>
+  <:col :let={post} label="Organization"><%= post.organization_id %></:col>
   <:col :let={post} label="Status"><%= post.status %></:col>
   <:action :let={post}>
     <div class="sr-only">
       <.link navigate={~p"/posts/#{post}"}>Show</.link>
     </div>
-    <.link navigate={~p"/posts/#{post}/edit"}>Edit</.link>
+    <.link
+      :if={MyBlog.Access.PostPolicy.authorized?(@conn.assigns.current_user, "update")}
+      navigate={~p"/posts/#{post}/edit"}
+    >
+      Edit
+    </.link>
   </:action>
   <:action :let={post}>
-    <.link href={~p"/posts/#{post}"} method="delete" data-confirm="Are you sure?">
+    <.link
+      :if={MyBlog.Access.PostPolicy.authorized?(@conn.assigns.current_user, "delete")}
+      href={~p"/posts/#{post}"}
+      method="delete"
+      data-confirm="Are you sure?"
+    >
       Delete
     </.link>
   </:action>

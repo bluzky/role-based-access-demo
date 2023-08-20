@@ -44,7 +44,7 @@ defmodule MyBlog.Accounts do
   """
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
-    user = Repo.get_by(User, email: email)
+    user = Repo.get_by(User, [email: email], tenant: false)
     if User.valid_password?(user, password), do: user
   end
 
@@ -271,7 +271,7 @@ defmodule MyBlog.Accounts do
     {:ok, query} = UserToken.verify_session_token_query(token)
 
     Repo.one(query)
-    |> Repo.preload([:organization, :role])
+    |> Repo.preload([:organization, :role], tenant: false)
   end
 
   @doc """
